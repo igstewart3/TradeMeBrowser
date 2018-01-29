@@ -8,14 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DetailViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource>
+@interface DetailViewController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource>
 
 // Category to display
 @property (strong, nonatomic) NSDictionary *detailItem;
 
 // UI Outlets
 @property (weak, nonatomic) IBOutlet UICollectionView *listingCollection;
-@property (weak, nonatomic) IBOutlet UITableView *categoryTable;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIStackView *stackView;
 

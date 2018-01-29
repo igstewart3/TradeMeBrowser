@@ -36,3 +36,5 @@ extern NSString *const kItemNameText;
 extern NSString *const kItemIdText;
 extern NSString *const kItemPriceText;
 extern NSString *const kShowIdText;
+extern NSString *const kCategories;
+extern NSString *const kBack;

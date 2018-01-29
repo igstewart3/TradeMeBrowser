@@ -16,8 +16,6 @@
 
 // All listings retrieved for this category
 @property NSArray *listings;
-// All subcategories in this category
-@property NSArray *categories;
 
 @end
 
@@ -29,7 +27,7 @@
     if (self.detailItem != nil)
     {
         self.title = [self.detailItem valueForKey:kName];
-        self.categories = [self.detailItem mutableArrayValueForKey:kSubcategories];
+        [self retrieveListings];
     }
 }
 
@@ -49,16 +47,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    // Resize UIStackView subviews to display full content
-    [self.listingCollection sizeToFit];
-    [self.categoryTable sizeToFit];
-    
-    // Update constraints
-    [self.listingCollection.heightAnchor constraintEqualToConstant: self.listingCollection.contentSize.height].active = YES;
-    [self.categoryTable.heightAnchor constraintEqualToConstant: self.categoryTable.contentSize.height].active = YES;
-    [self.listingCollection setNeedsUpdateConstraints];
-    [self.categoryTable setNeedsUpdateConstraints];
 }
 
 
@@ -148,7 +136,7 @@
     UICollectionReusableView *header = [self.listingCollection dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:kCollectionHeader forIndexPath:indexPath];
     
     // Only show header if there are listings present and subcategories being displayed
-    header.hidden = !(self.listings != nil && self.listings.count > 0 && self.categories != nil && self.categories.count > 0);
+    header.hidden = !(self.listings != nil && self.listings.count);
     
     return header;
 }
@@ -158,51 +146,13 @@
     return 1;
 }
 
-#pragma mark - Table View
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
-}
-
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.categories.count;
-}
-
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Dequeue cell and populate with subcategory
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kDetailCell forIndexPath:indexPath];
-    
-    NSDictionary *object = self.categories[indexPath.row];
-    cell.textLabel.text = [object valueForKey:kName];
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Setup detail controller for next level subcategory
-    DetailViewController *detailVC = [self.storyboard instantiateViewControllerWithIdentifier:kDetailViewController];
-    NSDictionary *object = self.categories[indexPath.row];
-    [detailVC setDetailItem:object];
-    
-    // Display detail with subcategory
-    [self.navigationController pushViewController:detailVC animated:YES];
-}
-
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return NO;
-}
-
 #pragma Listings
 
 -(void)retrieveListings
 {
+    if(self.detailItem == nil)
+        return;
+    
     // Retrieve category number
     NSString *categoryNumber = nil;
     NSObject *numberObject = [self.detailItem valueForKey:kNumber];
@@ -240,15 +190,11 @@
     {
         self.listingCollection.hidden = YES;
         
-        // If no categories either, display message
-        if(self.categories == nil || self.categories.count == 0)
-        {
-            UILabel *noResultsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.stackView.frame.size.width, 20)];
-            noResultsLabel.text = kNoItemsText;
-            noResultsLabel.textAlignment = NSTextAlignmentCenter;
-            
-            [self.stackView addSubview:noResultsLabel];
-        }
+        UILabel *noResultsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.stackView.frame.size.width, 20)];
+        noResultsLabel.text = kNoItemsText;
+        noResultsLabel.textAlignment = NSTextAlignmentCenter;
+        
+        [self.stackView addSubview:noResultsLabel];
     }
 }
 

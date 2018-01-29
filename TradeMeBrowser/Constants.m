@@ -36,3 +36,5 @@ NSString *const kItemNameText = @"<Item Name>";
 NSString *const kItemIdText = @"<Item ID>";
 NSString *const kItemPriceText = @"<Item Price>";
 NSString *const kShowIdText = @"ID: %@";
+NSString *const kCategories = @"Categories";
+NSString *const kBack = @"Back";

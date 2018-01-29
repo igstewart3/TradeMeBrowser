@@ -15,6 +15,7 @@
 
 // All categories
 @property NSMutableArray *categories;
+@property BOOL Remove;
 
 @end
 
@@ -23,14 +24,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Handle tree of categories up to 50 subcategories
+    self.categories = [[NSMutableArray alloc] initWithCapacity:50];
+    
+    // Get all categories
+    [self retrieveCategories];
+    
+    _Remove = YES;
+    
+    // Set up detail view
+    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    // Get full category list to display
-    [self retrieveCategories];
-    
     [super viewWillAppear:animated];
 }
 
@@ -39,6 +48,32 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)backButtonPressed:(id)sender
+{
+    if(_Remove)
+    {
+        [self.categories removeObjectAtIndex:(self.categories.count - 1)];
+    }
+    else
+    {
+        _Remove = YES;
+    }
+    [self.tableView reloadData];
+    NSDictionary *previous = self.categories[(self.categories.count - 1)];
+    self.detailViewController.detailItem = previous;
+    
+    if(self.categories.count == 1)
+    {
+        self.navigationItem.leftBarButtonItem = nil;
+    }
+}
+
+- (void)detailBackButtonPressed:(id)sender
+{
+    self.detailViewController.navigationItem.leftBarButtonItem = nil;
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - Table View
@@ -50,7 +85,16 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.categories.count;
+    if(self.categories != nil && self.categories.count > 0)
+    {
+        NSDictionary *object = self.categories[self.categories.count - 1];
+        NSMutableArray *currentCategories = [object valueForKey:kSubcategories];
+        return currentCategories.count;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -58,22 +102,49 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCell forIndexPath:indexPath];
 
     // Set category name as cell label
-    NSDictionary *object = self.categories[indexPath.row];
-    cell.textLabel.text = [object valueForKey:kName];
+    NSDictionary *object = self.categories[self.categories.count - 1];
+    NSMutableArray *subcategories = [object valueForKey:kSubcategories];
+    NSDictionary *subcategory = subcategories[indexPath.row];
+    cell.textLabel.text = [subcategory valueForKey:kName];
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DetailViewController *detailVC = [self.storyboard instantiateViewControllerWithIdentifier:kDetailViewController];
+    // Set back button
+    if(self.navigationItem.leftBarButtonItem == nil)
+    {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:kBack style:UIBarButtonItemStylePlain target:self action:@selector(backButtonPressed:)];
+    }
+    
+    NSUInteger categoryCount = self.categories.count - 1;
     
     // Set category for detail view
-    NSDictionary *object = self.categories[indexPath.row];
-    [detailVC setDetailItem:object];
+    NSDictionary *object = self.categories[categoryCount];
+    NSMutableArray *subcategories = [object valueForKey:kSubcategories];
+    NSDictionary *nextObject = subcategories[indexPath.row];
     
-    // Display detail view for selected category
-    [self.navigationController pushViewController:detailVC animated:YES];
+    [self.detailViewController setDetailItem:nextObject];
+    NSMutableArray *nextSubcategories = [nextObject valueForKey:kSubcategories];
+    if(nextSubcategories != nil)
+    {
+        [self.categories insertObject:nextObject atIndex:++categoryCount];
+        [self.tableView reloadData];
+    }
+    else
+    {
+        _Remove = NO;
+        if(self.splitViewController.isCollapsed)
+        {
+            [self.navigationController pushViewController:self.detailViewController animated:YES];
+            self.detailViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:kBack style:UIBarButtonItemStylePlain target:self action:@selector(detailBackButtonPressed:)];
+        }
+        else
+        {
+            self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryHidden;
+        }
+    }
 }
 
 
@@ -98,8 +169,11 @@
     if(jsonData != nil)
     {
         // Pull categories from subcategories value
-        self.categories = [jsonData mutableArrayValueForKey:kSubcategories];
+        [self.categories removeAllObjects];
+        self.navigationItem.leftBarButtonItem = nil;
+        [self.categories insertObject:jsonData atIndex:0];
         [self.tableView reloadData];
+        self.detailViewController.detailItem = jsonData;
     }
 }
 
