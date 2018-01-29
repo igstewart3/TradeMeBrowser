@@ -4,7 +4,7 @@ App designed for browsing Trade Me.
 
 Known bugs:
 
-Changing orientation from portrait to landscape after viewing listings will cause a blank screen to be displayed.
+Changing orientation from portrait to landscape after viewing a category will cause a blank screen to be displayed.
 
 Viewing an empty category will sometimes leave all listings blank until the application is restarted.
 
