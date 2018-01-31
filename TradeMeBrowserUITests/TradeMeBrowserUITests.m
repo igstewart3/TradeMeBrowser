@@ -34,50 +34,60 @@
     [super tearDown];
 }
 
-- (void)testFullUI
+- (void)testBrowseCategoriesLandscape
 {
+    [[XCUIDevice sharedDevice] setOrientation:UIDeviceOrientationLandscapeLeft];
+    
     XCUIApplication *app = [[XCUIApplication alloc] init];
     XCUIElementQuery *tablesQuery = app.tables;
     [tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Trade Me Motors"]/*[[".cells.staticTexts[@\"Trade Me Motors\"]",".staticTexts[@\"Trade Me Motors\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
     
-    XCUIElementQuery *scrollViewsQuery = app.scrollViews;
-    [[[scrollViewsQuery childrenMatchingType:XCUIElementTypeOther].element childrenMatchingType:XCUIElementTypeCollectionView].element swipeUp];
+    XCUIElement *motorbikesStaticText = tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Motorbikes"]/*[[".cells.staticTexts[@\"Motorbikes\"]",".staticTexts[@\"Motorbikes\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/;
+    [motorbikesStaticText tap];
+    [motorbikesStaticText tap];
+    [tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Dual purpose"]/*[[".cells.staticTexts[@\"Dual purpose\"]",".staticTexts[@\"Dual purpose\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
     
-    XCUIElementQuery *elementsQuery = scrollViewsQuery.otherElements;
-    XCUIElementQuery *cellsQuery = elementsQuery.collectionViews.cells;
-    [[cellsQuery.otherElements containingType:XCUIElementTypeStaticText identifier:@"Pro1 Chi 0048"].element swipeUp];
+    XCUIElement *backButton = app.navigationBars[@"Categories"].buttons[@"Back"];
+    [backButton tap];
+    [backButton tap];
+    [backButton tap];
+    [tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Trade Me Property"]/*[[".cells.staticTexts[@\"Trade Me Property\"]",".staticTexts[@\"Trade Me Property\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
+    [tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Commercial Property"]/*[[".cells.staticTexts[@\"Commercial Property\"]",".staticTexts[@\"Commercial Property\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
+    [tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Car parks"]/*[[".cells.staticTexts[@\"Car parks\"]",".staticTexts[@\"Car parks\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
     
-    XCUIElementQuery *tablesQuery2 = elementsQuery.tables;
-    [tablesQuery2/*@START_MENU_TOKEN@*/.staticTexts[@"Cars"]/*[[".cells.staticTexts[@\"Cars\"]",".staticTexts[@\"Cars\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
-    [[[cellsQuery.otherElements containingType:XCUIElementTypeStaticText identifier:@"Other 1969"] childrenMatchingType:XCUIElementTypeOther].element tap];
-    /*@START_MENU_TOKEN@*/[app.staticTexts[@"$58,000"] pressForDuration:0.7];/*[["app.staticTexts[@\"$58,000\"]","["," tap];"," pressForDuration:0.7];"],[[[-1,0,1]],[[1,3],[1,2]]],[0,0]]@END_MENU_TOKEN@*/
-    [app.navigationBars[@"Master"].buttons[@"Cars"] tap];
-    [app.navigationBars[@"Cars"].buttons[@"Trade Me Motors"] tap];
-    [app.navigationBars[@"Trade Me Motors"].buttons[@"Categories"] tap];
-    [tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Trade Me Jobs"]/*[[".cells.staticTexts[@\"Trade Me Jobs\"]",".staticTexts[@\"Trade Me Jobs\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
-    [tablesQuery2/*@START_MENU_TOKEN@*/.staticTexts[@"Accounting"]/*[[".cells.staticTexts[@\"Accounting\"]",".staticTexts[@\"Accounting\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
-    [tablesQuery2/*@START_MENU_TOKEN@*/.staticTexts[@"Accountants"]/*[[".cells.staticTexts[@\"Accountants\"]",".staticTexts[@\"Accountants\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
-    [tablesQuery2/*@START_MENU_TOKEN@*/.staticTexts[@"Assistant accountants"]/*[[".cells.staticTexts[@\"Assistant accountants\"]",".staticTexts[@\"Assistant accountants\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
-    [[[[[[app.otherElements containingType:XCUIElementTypeNavigationBar identifier:@"Assistant accountants"] childrenMatchingType:XCUIElementTypeOther].element childrenMatchingType:XCUIElementTypeOther].element childrenMatchingType:XCUIElementTypeOther].element childrenMatchingType:XCUIElementTypeScrollView].element tap];
-    [app.navigationBars[@"Assistant accountants"].buttons[@"Accountants"] tap];
-    [app.navigationBars[@"Accountants"].buttons[@"Accounting"] tap];
-    [app.navigationBars[@"Accounting"].buttons[@"Trade Me Jobs"] tap];
-    [app.navigationBars[@"Trade Me Jobs"].buttons[@"Categories"] tap];
+    XCUIElement *carParksNavigationBar = app.navigationBars[@"Car parks"];
+    [carParksNavigationBar.buttons[@"Switch to full screen mode"] tap];
+    [carParksNavigationBar.buttons[@"Master"] tap];
+    [backButton tap];
+    [backButton tap];
+    [[[app.collectionViews.cells.otherElements containingType:XCUIElementTypeStaticText identifier:@"Widget 100 by Junk 1B"] childrenMatchingType:XCUIElementTypeOther].element tap];
+    [app.navigationBars[@"Root"].buttons[@"Root"] tap];
 }
 
-- (void)testNoImageUI
+- (void)testBrowseCategoriesPortriat
 {
+    [[XCUIDevice sharedDevice] setOrientation:UIDeviceOrientationPortrait];
+    
     XCUIApplication *app = [[XCUIApplication alloc] init];
-    XCUIElement *tradeMePropertyStaticText = app.tables/*@START_MENU_TOKEN@*/.staticTexts[@"Trade Me Property"]/*[[".cells.staticTexts[@\"Trade Me Property\"]",".staticTexts[@\"Trade Me Property\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/;
-    [tradeMePropertyStaticText tap];
+    XCUIElementQuery *tablesQuery = app.tables;
+    [tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Trade Me Motors"]/*[[".cells.staticTexts[@\"Trade Me Motors\"]",".staticTexts[@\"Trade Me Motors\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
     
-    [[app.scrollViews.otherElements.collectionViews.cells.otherElements containingType:XCUIElementTypeStaticText identifier:@"6282697"].staticTexts[@"No Image Available"] tap];
-    [app.staticTexts[@"No Image Available"] tap];
+    XCUIElement *motorbikesStaticText = tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Motorbikes"]/*[[".cells.staticTexts[@\"Motorbikes\"]",".staticTexts[@\"Motorbikes\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/;
+    [motorbikesStaticText tap];
+    [motorbikesStaticText tap];
+    [tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Dual purpose"]/*[[".cells.staticTexts[@\"Dual purpose\"]",".staticTexts[@\"Dual purpose\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
     
-    XCUIElement *masterNavigationBar = app.navigationBars[@"Master"];
-    [masterNavigationBar.buttons[@"Trade Me Property"] tap];
-    XCUIElement *categoriesButton = app.navigationBars[@"Trade Me Property"].buttons[@"Categories"];
-    [categoriesButton tap];
+    [app.navigationBars[@"Dual purpose"].buttons[@"Categories"] tap];
+    XCUIElement *backButton = app.navigationBars[@"Categories"].buttons[@"Back"];
+    [backButton tap];
+    [backButton tap];
+    [backButton tap];
+    [tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Trade Me Property"]/*[[".cells.staticTexts[@\"Trade Me Property\"]",".staticTexts[@\"Trade Me Property\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
+    [tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Commercial Property"]/*[[".cells.staticTexts[@\"Commercial Property\"]",".staticTexts[@\"Commercial Property\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
+    [tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Car parks"]/*[[".cells.staticTexts[@\"Car parks\"]",".staticTexts[@\"Car parks\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ tap];
+    [app.navigationBars[@"Car parks"].buttons[@"Categories"] tap];
+    [backButton tap];
+    [backButton tap];
 }
 
 @end

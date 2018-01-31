@@ -48,6 +48,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No items found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fuI-yx-z4m">
+                                <rect key="frame" x="129" y="223.5" width="117" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="rya-Ep-T7X">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -160,6 +166,8 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="fuI-yx-z4m" firstAttribute="centerY" secondItem="svH-Pt-448" secondAttribute="centerY" constant="-100" id="Kjh-TE-rOo"/>
+                            <constraint firstItem="fuI-yx-z4m" firstAttribute="centerX" secondItem="svH-Pt-448" secondAttribute="centerX" id="Nad-pe-PLb"/>
                             <constraint firstItem="rya-Ep-T7X" firstAttribute="leading" secondItem="VUw-jc-0yf" secondAttribute="leading" id="Pzf-pC-DRN"/>
                             <constraint firstItem="rya-Ep-T7X" firstAttribute="top" secondItem="VUw-jc-0yf" secondAttribute="top" id="iOY-jJ-1MF"/>
                             <constraint firstItem="rya-Ep-T7X" firstAttribute="trailing" secondItem="VUw-jc-0yf" secondAttribute="trailing" id="oz5-W3-diV"/>
@@ -171,6 +179,7 @@
                     <navigationItem key="navigationItem" title="Detail" id="mOI-FS-AaM"/>
                     <connections>
                         <outlet property="listingCollection" destination="rya-Ep-T7X" id="eBK-Vr-okr"/>
+                        <outlet property="noItemsLabel" destination="fuI-yx-z4m" id="rOM-wt-gLP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FJe-Yq-33r" sceneMemberID="firstResponder"/>

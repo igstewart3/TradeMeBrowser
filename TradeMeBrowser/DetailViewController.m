@@ -23,6 +23,8 @@
 
 - (void)configureView
 {
+    self.noItemsLabel.hidden = YES;
+    
     // Update the UI to reflect category details.
     if (self.detailItem != nil)
     {
@@ -89,6 +91,8 @@
     cell.loadIndicator.hidden = NO;
     cell.noImageLabel.hidden = YES;
     
+    // Clear image and load
+    cell.listingImage.image = nil;
     NSString *imageUrl = [object valueForKey:kPictureHref];
     
     if(imageUrl != nil)
@@ -135,8 +139,10 @@
     // Dequeue collection header
     UICollectionReusableView *header = [self.listingCollection dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:kCollectionHeader forIndexPath:indexPath];
     
-    // Only show header if there are listings present and subcategories being displayed
-    header.hidden = !(self.listings != nil && self.listings.count);
+    // Only show header if there are no further subcategories
+    NSMutableArray *subcategories = [self.detailItem valueForKey:kSubcategories];
+    BOOL hideHeader = !(subcategories == nil && subcategories.count > 0);
+    header.hidden = hideHeader;
     
     return header;
 }
@@ -186,17 +192,20 @@
     }
     
     // If no listings, hide listings collection
-    if(self.listings == nil || self.listings.count == 0)
-    {
-        self.listingCollection.hidden = YES;
-        
-        UILabel *noResultsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.stackView.frame.size.width, 20)];
-        noResultsLabel.text = kNoItemsText;
-        noResultsLabel.textAlignment = NSTextAlignmentCenter;
-        
-        [self.stackView addSubview:noResultsLabel];
-    }
+    BOOL hideListings = (self.listings == nil || self.listings.count == 0);
+    
+    self.listingCollection.hidden = hideListings;
+    self.noItemsLabel.hidden = !hideListings;
 }
 
+-(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    if(self.masterPush == YES)
+    {
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+    
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
 
 @end

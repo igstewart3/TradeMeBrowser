@@ -13,10 +13,12 @@
 // Category to display
 @property (strong, nonatomic) NSDictionary *detailItem;
 
+// Set to true if details are being pushed by master view controller.
+@property (nonatomic, assign) BOOL masterPush;
+
 // UI Outlets
 @property (weak, nonatomic) IBOutlet UICollectionView *listingCollection;
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (weak, nonatomic) IBOutlet UIStackView *stackView;
+@property (weak, nonatomic) IBOutlet UILabel *noItemsLabel;
 
 @end
 

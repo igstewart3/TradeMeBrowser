@@ -15,7 +15,6 @@
 
 // All categories
 @property NSMutableArray *categories;
-@property BOOL Remove;
 
 @end
 
@@ -30,8 +29,6 @@
     
     // Get all categories
     [self retrieveCategories];
-    
-    _Remove = YES;
     
     // Set up detail view
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
@@ -52,14 +49,7 @@
 
 - (void)backButtonPressed:(id)sender
 {
-    if(_Remove)
-    {
-        [self.categories removeObjectAtIndex:(self.categories.count - 1)];
-    }
-    else
-    {
-        _Remove = YES;
-    }
+    [self.categories removeObjectAtIndex:(self.categories.count - 1)];
     [self.tableView reloadData];
     NSDictionary *previous = self.categories[(self.categories.count - 1)];
     self.detailViewController.detailItem = previous;
@@ -134,15 +124,16 @@
     }
     else
     {
-        _Remove = NO;
         if(self.splitViewController.isCollapsed)
         {
-            [self.navigationController pushViewController:self.detailViewController animated:YES];
-            self.detailViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:kBack style:UIBarButtonItemStylePlain target:self action:@selector(detailBackButtonPressed:)];
-        }
-        else
-        {
-            self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryHidden;
+            DetailViewController *detailVC = [self.storyboard instantiateViewControllerWithIdentifier:kDetailViewController];
+            
+            // Set category for detail view
+            [detailVC setDetailItem:nextObject];
+            [detailVC setMasterPush:YES];
+            
+            // Display detail view for selected category
+            [self.navigationController pushViewController:detailVC animated:YES];
         }
     }
 }
